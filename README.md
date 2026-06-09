@@ -28,15 +28,15 @@ Images are published to both Docker Hub and GitHub Container Registry.
 ### Docker Hub
 
 ```bash
-docker pull anaselgarhy/qt-wasm-builder:singlethread-latest
-docker pull anaselgarhy/qt-wasm-builder:multithread-latest
+docker pull anaselgarhy/qt-wasm-builder:singlethread
+docker pull anaselgarhy/qt-wasm-builder:multithread
 ```
 
 ### GitHub Container Registry
 
 ```bash
-docker pull ghcr.io/anaselgarhy/qt-wasm-builder:singlethread-latest
-docker pull ghcr.io/anaselgarhy/qt-wasm-builder:multithread-latest
+docker pull ghcr.io/anaselgarhy/qt-wasm-builder:singlethread
+docker pull ghcr.io/anaselgarhy/qt-wasm-builder:multithread
 ```
 
 ### Tag Scheme
@@ -52,13 +52,13 @@ Tags follow the format: `<variant>`, `<variant>-<sha>`, `<variant>-v<semver>`, o
 ### Build singlethread variant
 
 ```bash
-docker build -f Dockerfile.singlethread -t qt-wasm-builder:singlethread-latest .
+docker build -f Dockerfile.singlethread -t qt-wasm-builder:singlethread .
 ```
 
 ### Build multithread variant
 
 ```bash
-docker build -f Dockerfile.multithread -t qt-wasm-builder:multithread-latest .
+docker build -f Dockerfile.multithread -t qt-wasm-builder:multithread .
 ```
 
 ### Override versions
@@ -86,14 +86,14 @@ docker buildx build --platform linux/arm64 \
 ### Run a CMake build
 
 ```bash
-docker run --rm -v $(pwd):/app qt-wasm-builder:singlethread-latest \
+docker run --rm -v $(pwd):/app qt-wasm-builder:singlethread \
   cmake -B build -S . -G Ninja
 ```
 
 ### Compile directly with emcc
 
 ```bash
-docker run --rm -v $(pwd):/app qt-wasm-builder:singlethread-latest \
+docker run --rm -v $(pwd):/app qt-wasm-builder:singlethread \
   emcc main.cpp -o output.js -s WASM=1
 ```
 
