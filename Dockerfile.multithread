@@ -39,9 +39,9 @@ ENV QT_BASE_DIR=/opt/Qt/${QT_VER}/wasm_multithread \
 # build-base, cmake, ninja: required to build Qt WASM projects
 # python3, py3-pip: runtime for aqtinstall
 # curl, git: download sources
+# wabt, binaryen: wasm utilities
 # ------------------------------------------------------------------
 RUN apk add --no-cache \
-    bash \
     build-base \
     cmake \
     ninja \
@@ -51,14 +51,15 @@ RUN apk add --no-cache \
     py3-pip \
     gcompat \
     libstdc++ \
-    binaryen \
     qt6-qtbase-dev \
-    qt6-qtsvg-dev
+    qt6-qtsvg-dev \
+    wabt \
+    binaryen
 
 # ------------------------------------------------------------------
 # 2. Install aqtinstall and download Qt for WASM (multi-thread)
 # --break-system-packages: required on Alpine ≥3.19 (PEP 668)
-# --no-cache-dir: avoid storing pip cache (~30 MB)
+# --no-cache-dir: avoid storing pip cache
 # -m qtcharts qtwebsockets: extra modules the user requested
 # ------------------------------------------------------------------
 RUN pip3 install --no-cache-dir --break-system-packages aqtinstall \
@@ -68,8 +69,6 @@ RUN pip3 install --no-cache-dir --break-system-packages aqtinstall \
 
 # ------------------------------------------------------------------
 # 3. Install emscripten SDK
-# Shallow clone flags: --depth 1 --single-branch saves bandwidth.
-# Remove .git and zips afterwards to reclaim ~120 MB.
 # ------------------------------------------------------------------
 RUN git clone --depth 1 --single-branch --branch "${EMSDK_VER}" \
         https://github.com/emscripten-core/emsdk.git /opt/emsdk \
@@ -86,4 +85,4 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 WORKDIR /app
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["/bin/bash"]
+CMD ["/bin/sh"]
