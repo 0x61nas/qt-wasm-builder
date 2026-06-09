@@ -4,22 +4,22 @@
 # Update the base tag when newer Alpine releases are available.
 #
 # Build:
-#   docker build -f Dockerfile.multithread -t qt-wasm-builder:6.8.2-mt .
+#   docker build -f Dockerfile.multithread -t qt-wasm-builder:6.11.1-mt .
 #
 # Run (mount your project at /app):
-#   docker run --rm -v $(pwd):/app qt-wasm-builder:6.8.2-mt \
+#   docker run --rm -v $(pwd):/app qt-wasm-builder:6.11.1-mt \
 #     cmake -B build -S . -G Ninja
 #
 # Override Qt or emsdk version at build time:
-#   docker build --build-arg QT_VER=6.8.3 --build-arg EMSDK_VER=3.1.64 ...
+#   docker build --build-arg QT_VER=6.11.3 --build-arg EMSDK_VER=4.0.9 ...
 
 FROM alpine:3.23.4
 
 # ------------------------------------------------------------------
 # Build arguments — change these to pin different versions
 # ------------------------------------------------------------------
-ARG QT_VER=6.8.2
-ARG EMSDK_VER=3.1.56
+ARG QT_VER=6.11.1
+ARG EMSDK_VER=4.0.7
 
 # ------------------------------------------------------------------
 # Environment variables
@@ -39,9 +39,10 @@ ENV QT_BASE_DIR=/opt/Qt/${QT_VER}/wasm_multithread \
 # build-base, cmake, ninja: required to build Qt WASM projects
 # python3, py3-pip: runtime for aqtinstall
 # curl, git: download sources
-# wabt, binaryen: wasm utilities
+# binaryen: wasm utilities
 # ------------------------------------------------------------------
 RUN apk add --no-cache \
+    bash \
     build-base \
     cmake \
     ninja \
@@ -49,12 +50,36 @@ RUN apk add --no-cache \
     git \
     python3 \
     py3-pip \
+    nodejs \
     gcompat \
     libstdc++ \
     qt6-qtbase-dev \
     qt6-qtsvg-dev \
-    wabt \
     binaryen
+
+# ------------------------------------------------------------------
+# 1b. Download wabt prebuilt binaries (not packaged in Alpine)
+#     Architecture is auto-detected via ARG TARGETARCH (buildx) or uname.
+# ------------------------------------------------------------------
+ARG TARGETARCH
+RUN case "${TARGETARCH:-$(uname -m)}" in \
+      x86_64|amd64) WABT_ARCH=x64 ;; \
+      aarch64|arm64) WABT_ARCH=arm64 ;; \
+      *) echo "Unsupported architecture: ${TARGETARCH:-$(uname -m)}" && exit 1 ;; \
+    esac \
+    && curl -fsSL \
+      "https://github.com/WebAssembly/wabt/releases/download/1.0.41/wabt-1.0.41-linux-${WABT_ARCH}.tar.gz" \
+      | tar xz -C /usr/local --strip-components=1
+
+# Alternative: build wabt from source (comment out above, uncomment below)
+# RUN git clone --depth 1 --recursive https://github.com/WebAssembly/wabt.git /tmp/wabt \
+#     && cmake -S /tmp/wabt -B /tmp/wabt/build \
+#         -DCMAKE_BUILD_TYPE=Release \
+#         -DBUILD_TESTS=OFF \
+#         -DCMAKE_INSTALL_PREFIX=/usr/local \
+#     && cmake --build /tmp/wabt/build -- -j"$(nproc)" \
+#     && cmake --install /tmp/wabt/build \
+#     && rm -rf /tmp/wabt
 
 # ------------------------------------------------------------------
 # 2. Install aqtinstall and download Qt for WASM (multi-thread)
@@ -75,7 +100,8 @@ RUN git clone --depth 1 --single-branch --branch "${EMSDK_VER}" \
     && cd /opt/emsdk \
     && ./emsdk install "${EMSDK_VER}" \
     && ./emsdk activate "${EMSDK_VER}" \
-    && rm -rf /opt/emsdk/.git /opt/emsdk/zips
+    && sed -i "s|NODE_JS = .*|NODE_JS = '/usr/bin/node'|" /opt/emsdk/.emscripten \
+    && rm -rf /opt/emsdk/.git /opt/emsdk/zips /opt/emsdk/node
 
 # ------------------------------------------------------------------
 # 4. Build helper entrypoint
