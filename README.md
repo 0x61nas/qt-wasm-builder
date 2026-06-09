@@ -35,8 +35,8 @@ docker pull anaselgarhy/qt-wasm-builder:multithread
 ### GitHub Container Registry
 
 ```bash
-docker pull ghcr.io/anaselgarhy/qt-wasm-builder:singlethread
-docker pull ghcr.io/anaselgarhy/qt-wasm-builder:multithread
+docker pull ghcr.io/0x61nas/qt-wasm-builder:singlethread
+docker pull ghcr.io/0x61nas/qt-wasm-builder:multithread
 ```
 
 ### Tag Scheme
