@@ -1,0 +1,99 @@
+# syntax=docker/dockerfile:1
+# Qt WASM Builder (Single-thread) — Alpine Linux
+# Pinned to Alpine 3.23.4 (latest stable as of Jun 2026).
+# Update the base tag when newer Alpine releases are available.
+#
+# Build:
+#   docker build -f Dockerfile.singlethread -t qt-wasm-builder:6.8.2-st .
+#
+# Run (mount your project at /app):
+#   docker run --rm -v $(pwd):/app qt-wasm-builder:6.8.2-st \
+#     cmake -B build -S . -G Ninja
+#
+# Override Qt or emsdk version at build time:
+#   docker build --build-arg QT_VER=6.8.3 --build-arg EMSDK_VER=3.1.64 ...
+
+FROM alpine:3.23.4
+
+# ------------------------------------------------------------------
+# Build arguments — change these to pin different versions
+# ------------------------------------------------------------------
+ARG QT_VER=6.8.2
+ARG EMSDK_VER=3.1.56
+
+# ------------------------------------------------------------------
+# Environment variables
+# QT_BASE_DIR / QMAKESPEC — consumed by Qt's cmake toolchain file
+# EMSDK / EMSCRIPTEN     — consumed by emsdk_env.sh and build scripts
+# ------------------------------------------------------------------
+ENV QT_BASE_DIR=/opt/Qt/${QT_VER}/wasm_singlethread \
+    QMAKESPEC=/opt/Qt/${QT_VER}/wasm_singlethread/mkspecs \
+    EMSDK=/opt/emsdk \
+    EMSCRIPTEN=/opt/emsdk/upstream/emscripten
+
+# ------------------------------------------------------------------
+# 1. System dependencies
+# gcompat + libstdc++: glibc ABI layer for emsdk prebuilt binaries
+#   (LLVM, binaryen, node).  Without this the prebuilts will fail on
+#   musl-based Alpine.
+# build-base, cmake, ninja: required to build Qt WASM projects
+# python3, py3-pip: runtime for aqtinstall
+# curl, git: download sources
+# ------------------------------------------------------------------
+# binaryen: wasm-opt, wasm-strip for WASM binary optimization
+# gcompat: glibc ABI layer for emsdk prebuilt binaries (LLVM, binaryen, node)
+# qt6-qtbase-dev: host tools (moc, rcc, uic) — Alpine-native, compatible with musl
+# build-base, cmake, ninja: required to build Qt WASM projects
+# python3, py3-pip: runtime for aqtinstall
+# curl, git: download sources
+RUN apk add --no-cache \
+    bash \
+    build-base \
+    cmake \
+    ninja \
+    curl \
+    git \
+    python3 \
+    py3-pip \
+    gcompat \
+    libstdc++ \
+    binaryen \
+    qt6-qtbase-dev \
+    qt6-qtsvg-dev
+
+# ------------------------------------------------------------------
+# 2. Install aqtinstall and download Qt for WASM (single-thread)
+# --break-system-packages: required on Alpine ≥3.19 (PEP 668)
+# --no-cache-dir: avoid storing pip cache (~30 MB)
+# -m qtcharts qtwebsockets: extra modules the user requested
+# ------------------------------------------------------------------
+# Install Qt for WASM via aqtinstall.
+# Host tools (moc, rcc, uic) come from Alpine's qt6-qtbase-dev package above
+# — the official Qt linux-desktop binaries are RHEL-built and need glibc at
+# runtime, which conflicts with Alpine's musl libc.
+RUN pip3 install --no-cache-dir --break-system-packages aqtinstall \
+    && aqt install-qt all_os wasm "${QT_VER}" wasm_singlethread \
+        -O /opt/Qt \
+        -m qtcharts qtwebsockets
+
+# ------------------------------------------------------------------
+# 3. Install emscripten SDK
+# Shallow clone flags: --depth 1 --single-branch saves bandwidth.
+# Remove .git and zips afterwards to reclaim ~120 MB.
+# ------------------------------------------------------------------
+RUN git clone --depth 1 --single-branch --branch "${EMSDK_VER}" \
+        https://github.com/emscripten-core/emsdk.git /opt/emsdk \
+    && cd /opt/emsdk \
+    && ./emsdk install "${EMSDK_VER}" \
+    && ./emsdk activate "${EMSDK_VER}" \
+    && rm -rf /opt/emsdk/.git /opt/emsdk/zips
+
+# ------------------------------------------------------------------
+# 4. Build helper entrypoint
+# ------------------------------------------------------------------
+COPY entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+WORKDIR /app
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["/bin/bash"]
