@@ -9,8 +9,6 @@ on:
   pull_request:
     branches:
       - aurora
-  schedule:
-    - cron: "0 0 * * 0"
 
 permissions:
   packages: write
@@ -33,8 +31,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            anaselgarhy/qt-wasm-docker
-            ghcr.io/${{ github.repository_owner }}/qt-wasm-docker
+            anaselgarhy/qt-wasm-builder
+            ghcr.io/${{ github.repository_owner }}/qt-wasm-builder
           tags: |
             type=raw,value=${{ matrix.variant }},priority=1000
             type=sha,prefix=${{ matrix.variant }}-
