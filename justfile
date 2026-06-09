@@ -7,7 +7,6 @@ setup-remotes:
     git remote add disroot ssh://git@git.disroot.org/anas/{{REPO_NAME}}.git
     git remote add tangled git@tangled.org:anas.tngl.sh/{{REPO_NAME}}
     git remote add codefloe ssh://git@codefloe.com/anas/{{REPO_NAME}}.git
-    git remote add gitea git@gitea.com:0x61nas/{{REPO_NAME}}.git
     git remote add gitgud git@ssh.gitgud.io:anelgarhy/{{REPO_NAME}}.git
 
 # Push the code to all remotes
@@ -18,7 +17,6 @@ push FLAGS="-u" BRANSH="aurora":
     git push {{FLAGS}} disroot {{BRANSH}}
     git push {{FLAGS}} tangled {{BRANSH}}
     git push {{FLAGS}} codefloe {{BRANSH}}
-    git push {{FLAGS}} gitea {{BRANSH}} 
     git push {{FLAGS}} gitgud {{BRANSH}} 
 
 # Push the git tags to all remotes
@@ -29,7 +27,6 @@ pusht: push
     git push --tags disroot
     git push --tags tangled
     git push --tags codefloe
-    git push --tags gitea
     git push --tags gitgud
 
 clean:
