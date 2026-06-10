@@ -18,8 +18,8 @@ Production-ready Qt WASM builder Docker images based on Alpine Linux, with full 
 
 | Variant | Dockerfile | Qt Arch | Use Case |
 |---|---|---|---|
-| `singlethread` | `Dockerfile.singlethread` | `wasm_singlethread` | Standard WASM apps |
-| `multithread` | `Dockerfile.multithread` | `wasm_multithread` | Apps needing pthreads/WASM threads |
+| `singlethread` | `singlethrea.dockerfiled` | `wasm_singlethread` | Standard WASM apps |
+| `multithread` | `multithrea.dockerfiled` | `wasm_multithread` | Apps needing pthreads/WASM threads |
 
 ## Pre-built Images
 
@@ -52,13 +52,13 @@ Tags follow the format: `<variant>`, `<variant>-<sha>`, `<variant>-v<semver>`, o
 ### Build singlethread variant
 
 ```bash
-docker build -f Dockerfile.singlethread -t qt-wasm-builder:singlethread .
+docker build -f singlethread.dockerfile -t qt-wasm-builder:singlethread .
 ```
 
 ### Build multithread variant
 
 ```bash
-docker build -f Dockerfile.multithread -t qt-wasm-builder:multithread .
+docker build -f multithread.dockerfile -t qt-wasm-builder:multithread .
 ```
 
 ### Override versions
@@ -67,7 +67,7 @@ docker build -f Dockerfile.multithread -t qt-wasm-builder:multithread .
 docker build \
   --build-arg QT_VER=6.11.3 \
   --build-arg EMSDK_VER=4.0.9 \
-  -f Dockerfile.singlethread \
+  -f singlethread.dockerfile \
   -t qt-wasm-builder:custom .
 ```
 
@@ -76,7 +76,7 @@ docker build \
 ```bash
 docker run --privileged --rm tonistiigi/binfmt --install arm64
 docker buildx build --platform linux/arm64 \
-  -f Dockerfile.singlethread \
+  -f singlethread.dockerfile \
   -t qt-wasm-builder:singlethread-arm64 \
   --load .
 ```
