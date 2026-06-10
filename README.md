@@ -132,6 +132,17 @@ Qt 6.11 targets emscripten 4.0.7. The prebuilt Qt WASM binaries from aqtinstall 
 
 Host Qt tools (moc/rcc/uic) come from Alpine's `qt6-qtbase-dev` package. A minor version mismatch with the WASM target version is acceptable for code-generation tools.
 
+## Source Code
+
+- **GitHub**: https://github.com/0x61nas/qt-wasm-builder
+- **GitLab**: https://gitlab.com/anelgarhy/qt-wasm-builder
+- **Codeberg**: https://codeberg.org/0x61nas/qt-wasm-builder
+- **Disroot**: https://git.disroot.org/anas/qt-wasm-builder
+- **Codefloe**: https://codefloe.com/anas/qt-wasm-builder
+- **GitGud**: https://gitgud.io/anelgarhy/qt-wasm-builder
+- **Tangled**: https://tangled.org/anas.tngl.sh/qt-wasm-builder
+
 ## License
 
 This project is provided under the MIT license. Qt itself is licensed under LGPLv3 / GPLv3 / commercial licenses. Emscripten is MIT-licensed.
+
