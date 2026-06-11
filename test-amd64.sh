@@ -5,7 +5,7 @@ VARIANT="${1:-singlethread}"
 IMAGE="qt-wasm-builder:test-${VARIANT}-amd64"
 
 echo "=== Building ${VARIANT} image for amd64 ==="
-docker build -f "Dockerfile.${VARIANT}" -t "$IMAGE" .
+docker build --build-arg "VARIANT=${VARIANT}" -t "$IMAGE" .
 
 echo ""
 echo "=== Building test app ==="

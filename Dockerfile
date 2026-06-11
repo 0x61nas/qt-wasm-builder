@@ -1,10 +1,11 @@
 # syntax=docker/dockerfile:1
-# Qt WASM Builder (Single-thread) — Alpine Linux
+# Qt WASM Builder — Alpine Linux
 # Pinned to Alpine 3.23.4 (latest stable as of Jun 2026).
 # Update the base tag when newer Alpine releases are available.
 #
 # Build:
-#   docker build -f Dockerfile.singlethread -t qt-wasm-builder:6.11.1-st .
+#   docker build --build-arg VARIANT=singlethread  -t qt-wasm-builder:6.11.1-st .
+#   docker build --build-arg VARIANT=multithread   -t qt-wasm-builder:6.11.1-mt  .
 #
 # Run (mount your project at /app):
 #   docker run --rm -v $(pwd):/app qt-wasm-builder:6.11.1-st \
@@ -20,14 +21,15 @@ FROM alpine:3.23.4
 # ------------------------------------------------------------------
 ARG QT_VER=6.11.1
 ARG EMSDK_VER=4.0.7
+ARG VARIANT
 
 # ------------------------------------------------------------------
 # Environment variables
 # QT_BASE_DIR / QMAKESPEC — consumed by Qt's cmake toolchain file
 # EMSDK / EMSCRIPTEN     — consumed by emsdk_env.sh and build scripts
 # ------------------------------------------------------------------
-ENV QT_BASE_DIR=/opt/Qt/${QT_VER}/wasm_singlethread \
-    QMAKESPEC=/opt/Qt/${QT_VER}/wasm_singlethread/mkspecs \
+ENV QT_BASE_DIR=/opt/Qt/${QT_VER}/wasm_${VARIANT} \
+    QMAKESPEC=/opt/Qt/${QT_VER}/wasm_${VARIANT}/mkspecs \
     EMSDK=/opt/emsdk \
     EMSCRIPTEN=/opt/emsdk/upstream/emscripten
 
@@ -40,6 +42,7 @@ ENV QT_BASE_DIR=/opt/Qt/${QT_VER}/wasm_singlethread \
 # python3, py3-pip: runtime for aqtinstall
 # curl, git: download sources
 # binaryen: wasm utilities
+# ------------------------------------------------------------------
 RUN apk add --no-cache \
     bash \
     build-base \
@@ -81,17 +84,13 @@ RUN case "${TARGETARCH:-$(uname -m)}" in \
 #     && rm -rf /tmp/wabt
 
 # ------------------------------------------------------------------
-# 2. Install aqtinstall and download Qt for WASM (single-thread)
+# 2. Install aqtinstall and download Qt for WASM
 # --break-system-packages: required on Alpine ≥3.19 (PEP 668)
 # --no-cache-dir: avoid storing pip cache (~30 MB)
 # -m qtcharts qtwebsockets: extra modules the user requested
 # ------------------------------------------------------------------
-# Install Qt for WASM via aqtinstall.
-# Host tools (moc, rcc, uic) come from Alpine's qt6-qtbase-dev package above
-# — the official Qt linux-desktop binaries are RHEL-built and need glibc at
-# runtime, which conflicts with Alpine's musl libc.
 RUN pip3 install --no-cache-dir --break-system-packages aqtinstall \
-    && aqt install-qt all_os wasm "${QT_VER}" wasm_singlethread \
+    && aqt install-qt all_os wasm "${QT_VER}" "wasm_${VARIANT}" \
         -O /opt/Qt \
         -m qtcharts qtwebsockets
 

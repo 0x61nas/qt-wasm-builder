@@ -20,7 +20,7 @@ fi
 echo ""
 echo "=== Building ${VARIANT} image for arm64 (via QEMU) ==="
 docker buildx build --platform linux/arm64 \
-    -f "Dockerfile.${VARIANT}" \
+    --build-arg "VARIANT=${VARIANT}" \
     -t "$IMAGE" \
     --load .
 
