@@ -86,8 +86,8 @@ RUN case "${TARGETARCH:-$(uname -m)}" in \
 # ------------------------------------------------------------------
 # 2. Install aqtinstall and download Qt for WASM
 # --break-system-packages: required on Alpine ≥3.19 (PEP 668)
-# --no-cache-dir: avoid storing pip cache (~30 MB)
-# -m qtcharts qtwebsockets: extra modules the user requested
+# --no-cache-dir: avoid storing pip cache
+# -m qtcharts qtwebsockets: extra modules
 # ------------------------------------------------------------------
 RUN pip3 install --no-cache-dir --break-system-packages aqtinstall \
     && aqt install-qt all_os wasm "${QT_VER}" "wasm_${VARIANT}" \
