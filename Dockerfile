@@ -46,6 +46,7 @@ ENV QT_BASE_DIR=/opt/Qt/${QT_VER}/wasm_${VARIANT} \
 RUN apk add --no-cache \
     bash \
     build-base \
+    7zip \
     cmake \
     ninja \
     curl \
