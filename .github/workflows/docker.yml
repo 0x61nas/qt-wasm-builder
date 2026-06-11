@@ -86,5 +86,13 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache-${{ matrix.variant }}
           cache-to: type=local,dest=/tmp/.buildx-cache-${{ matrix.variant }}
 
+      - name: Update repo description
+        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5
+        with:
+          username: anaselgarhy #${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          repository: anaselgarhy/qt-wasm-builder
+          readme-filepath: ./README.md # repo root
+
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
