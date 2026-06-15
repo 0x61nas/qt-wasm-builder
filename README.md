@@ -41,7 +41,7 @@ docker pull ghcr.io/0x61nas/qt-wasm-builder:multithread
 
 ### Tag Scheme
 
-Tags follow the format: `<variant>`, `<variant>-<sha>`, `<variant>-v<semver>`, or `<variant>-<schedule>`.
+Tags follow the format: `<variant>` for the latest, or `<variant>-<qt semver>-alpine<semver>-<rev>`.
 
 ## Manual Build
 
