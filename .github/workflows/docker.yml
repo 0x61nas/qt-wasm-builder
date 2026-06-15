@@ -1,14 +1,8 @@
 name: Docker Automated Builds
 
 on:
-  push:
-    branches:
-      - aurora
     tags:
       - "v*.*.*"
-  pull_request:
-    branches:
-      - aurora
 
 permissions:
   packages: write
