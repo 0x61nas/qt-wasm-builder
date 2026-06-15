@@ -1,6 +1,7 @@
 name: Docker Automated Builds
 
 on:
+  push:
     tags:
       - "*-*-*"
 
