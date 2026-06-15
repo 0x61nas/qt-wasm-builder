@@ -2,7 +2,7 @@ name: Docker Automated Builds
 
 on:
     tags:
-      - "v*.*.*"
+      - "*-*-*"
 
 permissions:
   packages: write
