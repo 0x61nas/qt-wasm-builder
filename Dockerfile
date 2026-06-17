@@ -14,7 +14,7 @@
 # Override Qt or emsdk version at build time:
 #   docker build --build-arg QT_VER=6.11.3 --build-arg EMSDK_VER=4.0.9 ...
 
-FROM alpine:3.24.0
+FROM alpine:3.24.1
 
 # ------------------------------------------------------------------
 # Build arguments — change these to pin different versions
