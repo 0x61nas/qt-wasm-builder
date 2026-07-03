@@ -11,6 +11,11 @@ jobs:
     runs-on: anas-local-action-runner
     steps:
       - uses: actions/checkout@v7
+      
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y jq curl
 
       - name: Create release
         id: create_release
