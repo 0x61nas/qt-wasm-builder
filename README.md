@@ -5,9 +5,9 @@ Production-ready Qt WASM builder Docker images based on Alpine Linux, with full 
 ## Features
 
 - **Two variants**: `wasm_singlethread` and `wasm_multithread`
-- **Qt 6.11.1** for WASM with extra modules: qtcharts, qtwebsockets, qtdeclarative, qtsvg, qttools
+- **Qt 6.11.2** for WASM with extra modules: qtcharts, qtwebsockets, qtdeclarative, qtsvg, qttools
 - **Emscripten SDK 4.0.7** — the version Qt 6.11 targets
-- **Alpine Linux 3.23.4** base — small, secure, musl-based
+- **Alpine Linux 3.24.2** base — small, secure, musl-based
 - **Host Qt tools** from Alpine's `qt6-qtbase-dev` (moc, rcc, uic)
 - **wasm-opt** from binaryen for WebAssembly optimization
 - **wabt** prebuilt binaries (wat2wasm, wasm2wat, wasm-objdump, etc.)
@@ -66,7 +66,7 @@ docker build --build-arg VARIANT=multithread -t qt-wasm-builder:multithread .
 ```bash
 docker build \
   --build-arg VARIANT=singlethread \
-  --build-arg QT_VER=6.11.3 \
+  --build-arg QT_VER=6.11.1 \
   --build-arg EMSDK_VER=4.0.9 \
   -t qt-wasm-builder:custom .
 ```
@@ -111,9 +111,9 @@ docker run --rm -v $(pwd):/app qt-wasm-builder:singlethread \
 
 | Component | Details |
 |---|---|
-| **Base OS** | Alpine Linux 3.23.4 (musl-based) |
+| **Base OS** | Alpine Linux 3.24.2 (musl-based) |
 | **emsdk** | v4.0.7, installed at `/opt/emsdk` |
-| **Qt WASM** | v6.11.1, installed via aqtinstall at `/opt/Qt/6.11.1/wasm_*` |
+| **Qt WASM** | v6.11.2, installed via aqtinstall at `/opt/Qt/6.11.2/wasm_*` |
 | **Host Qt tools** | Alpine `qt6-qtbase-dev` package (moc, rcc, uic live at `/usr/lib/qt6/libexec/`) |
 | **wasm-opt** | From Alpine `binaryen` package |
 | **wabt** | Prebuilt binaries from GitHub releases (x86_64 `/usr/local/bin/`) |

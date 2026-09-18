@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # Qt WASM Builder — Alpine Linux
-# Pinned to Alpine 3.23.4 (latest stable as of Jun 2026).
+# Pinned to Alpine 3.24.2 (latest stable as of Sep 2026).
 # Update the base tag when newer Alpine releases are available.
 #
 # Build:
@@ -19,7 +19,10 @@ FROM alpine:3.24.2
 # ------------------------------------------------------------------
 # Build arguments — change these to pin different versions
 # ------------------------------------------------------------------
+# NOTE(anas): You can get the latest Qt6 version from: https://doc.qt.io/qt-6/qt-releases.html
 ARG QT_VER=6.11.2
+# IMPORTANT(anas): The supported version of Emscripten for 6.11.2 is Emscripten 4.0.7.
+# ref: https://doc.qt.io/qt-6/wasm.html
 ARG EMSDK_VER=4.0.7
 ARG VARIANT
 
