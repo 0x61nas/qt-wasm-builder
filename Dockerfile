@@ -4,22 +4,22 @@
 # Update the base tag when newer Alpine releases are available.
 #
 # Build:
-#   docker build --build-arg VARIANT=singlethread  -t qt-wasm-builder:6.11.1-st .
-#   docker build --build-arg VARIANT=multithread   -t qt-wasm-builder:6.11.1-mt  .
+#   docker build --build-arg VARIANT=singlethread  -t qt-wasm-builder:6.11.2-st .
+#   docker build --build-arg VARIANT=multithread   -t qt-wasm-builder:6.11.2-mt  .
 #
 # Run (mount your project at /app):
-#   docker run --rm -v $(pwd):/app qt-wasm-builder:6.11.1-st \
+#   docker run --rm -v $(pwd):/app qt-wasm-builder:6.11.2-st \
 #     cmake -B build -S . -G Ninja
 #
 # Override Qt or emsdk version at build time:
-#   docker build --build-arg QT_VER=6.11.3 --build-arg EMSDK_VER=4.0.9 ...
+#   docker build --build-arg QT_VER=6.11.1 --build-arg EMSDK_VER=4.0.9 ...
 
 FROM alpine:3.24.2
 
 # ------------------------------------------------------------------
 # Build arguments — change these to pin different versions
 # ------------------------------------------------------------------
-ARG QT_VER=6.11.1
+ARG QT_VER=6.11.2
 ARG EMSDK_VER=4.0.7
 ARG VARIANT
 
