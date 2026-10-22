@@ -4,15 +4,15 @@
 # Update the base tag when newer Alpine releases are available.
 #
 # Build:
-#   docker build --build-arg VARIANT=singlethread  -t qt-wasm-builder:6.11.2-st .
-#   docker build --build-arg VARIANT=multithread   -t qt-wasm-builder:6.11.2-mt  .
+#   docker build --build-arg VARIANT=singlethread  -t qt-wasm-builder:6.12.0-st .
+#   docker build --build-arg VARIANT=multithread   -t qt-wasm-builder:6.12.0-mt  .
 #
 # Run (mount your project at /app):
-#   docker run --rm -v $(pwd):/app qt-wasm-builder:6.11.2-st \
+#   docker run --rm -v $(pwd):/app qt-wasm-builder:6.12.0-st \
 #     cmake -B build -S . -G Ninja
 #
 # Override Qt or emsdk version at build time:
-#   docker build --build-arg QT_VER=6.11.1 --build-arg EMSDK_VER=4.0.9 ...
+#   docker build --build-arg QT_VER=6.11.1 --build-arg EMSDK_VER=5.0.5 ...
 
 FROM alpine:3.24.3
 
@@ -20,10 +20,10 @@ FROM alpine:3.24.3
 # Build arguments — change these to pin different versions
 # ------------------------------------------------------------------
 # NOTE(anas): You can get the latest Qt6 version from: https://doc.qt.io/qt-6/qt-releases.html
-ARG QT_VER=6.11.2
-# IMPORTANT(anas): The supported version of Emscripten for 6.11.2 is Emscripten 4.0.7.
+ARG QT_VER=6.12.0
+# IMPORTANT(anas): The supported version of Emscripten for 6.12.0 is Emscripten 5.0.5.
 # ref: https://doc.qt.io/qt-6/wasm.html
-ARG EMSDK_VER=4.0.7
+ARG EMSDK_VER=5.0.5
 ARG VARIANT
 
 # ------------------------------------------------------------------
