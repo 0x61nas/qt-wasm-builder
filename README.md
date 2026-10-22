@@ -5,9 +5,9 @@ Production-ready Qt WASM builder Docker images based on Alpine Linux, with full 
 ## Features
 
 - **Two variants**: `wasm_singlethread` and `wasm_multithread`
-- **Qt 6.11.2** for WASM with extra modules: qtcharts, qtwebsockets, qtdeclarative, qtsvg, qttools
-- **Emscripten SDK 4.0.7** — the version Qt 6.11 targets
-- **Alpine Linux 3.24.2** base — small, secure, musl-based
+- **Qt 6.12.0** for WASM with extra modules: qtcharts, qtwebsockets, qtdeclarative, qtsvg, qttools
+- **Emscripten SDK 5.0.5** — the version Qt 6.12 targets
+- **Alpine Linux 3.24.3** base — small, secure, musl-based
 - **Host Qt tools** from Alpine's `qt6-qtbase-dev` (moc, rcc, uic)
 - **wasm-opt** from binaryen for WebAssembly optimization
 - **wabt** prebuilt binaries (wat2wasm, wasm2wat, wasm-objdump, etc.)
@@ -111,9 +111,9 @@ docker run --rm -v $(pwd):/app qt-wasm-builder:singlethread \
 
 | Component | Details |
 |---|---|
-| **Base OS** | Alpine Linux 3.24.2 (musl-based) |
-| **emsdk** | v4.0.7, installed at `/opt/emsdk` |
-| **Qt WASM** | v6.11.2, installed via aqtinstall at `/opt/Qt/6.11.2/wasm_*` |
+| **Base OS** | Alpine Linux 3.24.3 (musl-based) |
+| **emsdk** | v5.0.5, installed at `/opt/emsdk` |
+| **Qt WASM** | v6.12.0, installed via aqtinstall at `/opt/Qt/6.12.0/wasm_*` |
 | **Host Qt tools** | Alpine `qt6-qtbase-dev` package (moc, rcc, uic live at `/usr/lib/qt6/libexec/`) |
 | **wasm-opt** | From Alpine `binaryen` package |
 | **wabt** | Prebuilt binaries from GitHub releases (x86_64 `/usr/local/bin/`) |
@@ -124,11 +124,11 @@ docker run --rm -v $(pwd):/app qt-wasm-builder:singlethread \
 ### Platform Support
 
 - **linux/amd64**: Fully supported, tested with every build
-- **linux/arm64**: Supported via QEMU emulation in CI. Emscripten 4.0.7+ provides native arm64 Linux prebuilts
+- **linux/arm64**: Supported via QEMU emulation in CI. Emscripten 5.0.5+ provides native arm64 Linux prebuilts
 
 ### Version Compatibility
 
-Qt 6.11 targets emscripten 4.0.7. The prebuilt Qt WASM binaries from aqtinstall are compiled against that emscripten version. Running with a different emscripten version may cause ABI issues — this image pins both to matching versions.
+Qt 6.12 targets emscripten 5.0.5. The prebuilt Qt WASM binaries from aqtinstall are compiled against that emscripten version. Running with a different emscripten version may cause ABI issues — this image pins both to matching versions.
 
 Host Qt tools (moc/rcc/uic) come from Alpine's `qt6-qtbase-dev` package. A minor version mismatch with the WASM target version is acceptable for code-generation tools.
 
