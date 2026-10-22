@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Build the test app natively using host g++ and Qt6 (via pkg-config).
 # Usage: ./build.sh [build-dir]
 
